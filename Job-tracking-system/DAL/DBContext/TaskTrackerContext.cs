@@ -9,15 +9,14 @@ namespace DAL.DBContext
 {
     public class TaskTrackerContext : DbContext, ITaskTrackerContext
     {
-        public TaskTrackerContext() { }
+        /*public TaskTrackerContext() { }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(@"Data Source =.\SQLEXPRESS01;Initial Catalog = TaskTrackingSystem; Integrated Security = True;");
-        }
+        }*/
         public TaskTrackerContext(DbContextOptions<TaskTrackerContext> options) 
             :base(options)
         {
-            //Database.EnsureCreated();
         }
         public DbSet<Project> Projects { get; set; }
         public DbSet<Role> Roles { get; set; }
@@ -28,7 +27,7 @@ namespace DAL.DBContext
 
     public class EntitiesContextInitializer
     {
-        void InitializeRole(TaskTrackerContext contex)
+        void InitializeRole(TaskTrackerContext context)
         {
             List<Role> roles = new List<Role>
             {
@@ -37,7 +36,8 @@ namespace DAL.DBContext
                 new Role { Name = "Employee"},
                 new Role { Name = "Manager"}
             };
-            contex.Roles.AddRange(roles);
+            context.Roles.AddRange(roles);
+            context.SaveChanges();
         }
         private Role GetRole(string name, TaskTrackerContext context)
         {
@@ -69,6 +69,7 @@ namespace DAL.DBContext
 
             context.Users.AddRange(users);
             context.UserInfos.AddRange(userInfos);
+            context.SaveChanges();
         }
         private User GetUser(int id, TaskTrackerContext context)
         {
@@ -78,14 +79,14 @@ namespace DAL.DBContext
         {
             List<Task> tasks = new List<Task>
             {
-                new Task { Name = "WEB Api system", Description = "Develop WEB Api system", Status = "Ice Box", 
+                new Task { Name = "WEB Api system", Description = "Develop WEB Api system", Status = "Ice Box",
                     PercentageOfExecution = 0, Employee = null, IssuedBy = null},
                 new Task { Name = "Unit Tests", Description = "Developing unit tests", Status = "In progress",
                     PercentageOfExecution = 40, Employee = GetUser(3, context), IssuedBy = GetUser(1, context)},
                 new Task { Name = "Business Logic Layer", Description = "Developing BLL", Status = "Testing",
-                    PercentageOfExecution = 75, Employee = GetUser(2, context), IssuedBy = GetUser(1, context)},
+                    PercentageOfExecution = 75,  Employee = GetUser(2, context), IssuedBy = GetUser(1, context)},
                 new Task { Name = "Data Access Layer", Description = "Developing Data Access Layer", Status = "Complete",
-                    PercentageOfExecution = 100, Employee = GetUser(3, context), IssuedBy = GetUser(1, context)}
+                    PercentageOfExecution = 100,  Employee = GetUser(3, context), IssuedBy = GetUser(1, context)}
             };
             Project project = new Project{ Name = "Task Tracking System", Status = "In progress", Client = GetUser(4, context),
                 DataStart = DateTime.Now, DataEnd = DateTime.Now.AddDays(20), Tasks = tasks};
@@ -96,6 +97,7 @@ namespace DAL.DBContext
 
             context.Tasks.AddRange(tasks);
             context.Projects.Add(project);
+            context.SaveChanges();
         }
 
         public void Seed(TaskTrackerContext context)

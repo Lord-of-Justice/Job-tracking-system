@@ -19,8 +19,6 @@ namespace Job_tracking_system
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
-
             var builder = new ConfigurationBuilder();
             // установка пути к текущему каталогу
             builder.SetBasePath(Directory.GetCurrentDirectory());
@@ -39,13 +37,17 @@ namespace Job_tracking_system
             using (TaskTrackerContext db = new TaskTrackerContext(options))
             {
                 EntitiesContextInitializer init = new EntitiesContextInitializer();
-                init.Seed(db);
+                // for first creation in database
+                //init.Seed(db);
                 var users = db.Users.ToList();
                 foreach (User u in users)
                 {
                     Debug.WriteLine($"{u.Id}.{u.LoginName} - {u.PasswordHash}");
                 }
             }
+
+
+            CreateHostBuilder(args).Build().Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

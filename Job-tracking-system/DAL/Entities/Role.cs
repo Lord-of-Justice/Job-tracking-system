@@ -9,6 +9,6 @@ namespace DAL.Entities
     {
         [Key]
         public string Name { get; set; }
-        public ICollection<User> Users { get; set; }
+        public ICollection<UserInfo> Users { get; set; }
     }
 }

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(TaskTrackerContext))]
-    [Migration("20191230194843_Initialize")]
-    partial class Initialize
+    [Migration("20200102131134_UpdateUserRoleKey")]
+    partial class UpdateUserRoleKey
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -113,12 +113,7 @@ namespace DAL.Migrations
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RoleName")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("RoleName");
 
                     b.ToTable("Users");
                 });
@@ -178,17 +173,10 @@ namespace DAL.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DAL.Entities.User", b =>
-                {
-                    b.HasOne("DAL.Entities.Role", null)
-                        .WithMany("Users")
-                        .HasForeignKey("RoleName");
-                });
-
             modelBuilder.Entity("DAL.Entities.UserInfo", b =>
                 {
                     b.HasOne("DAL.Entities.Role", "Role")
-                        .WithMany()
+                        .WithMany("Users")
                         .HasForeignKey("RoleName");
 
                     b.HasOne("DAL.Entities.User", "User")
