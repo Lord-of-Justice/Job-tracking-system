@@ -15,28 +15,28 @@ namespace TaskTrackingSystem.BLL.Services
 {
     public class UserService : IUserInterface
     {
-        IUnitOfWork Database { get; set; }
+        IUnitOfWork _db { get; set; }
 
         public UserService(IUnitOfWork uow)
         {
-            Database = uow;
+            _db = uow;
         }
 
         public async Task<OperationDetails> Create(UserDTO userDto)
         {
-            ApplicationUser user = await Database.UserManager.FindByEmailAsync(userDto.Email);
+            ApplicationUser user = await _db.UserManager.FindByEmailAsync(userDto.Email);
             if (user == null)
             {
                 user = new ApplicationUser { Email = userDto.Email, UserName = userDto.Email };
-                var result = await Database.UserManager.CreateAsync(user, userDto.Password);
+                var result = await _db.UserManager.CreateAsync(user, userDto.Password);
                 if (result.Errors.Count() > 0)
                     return new OperationDetails(false, result.Errors.FirstOrDefault(), "");
                 // добавляем роль
-                await Database.UserManager.AddToRoleAsync(user.Id, userDto.Role);
+                await _db.UserManager.AddToRoleAsync(user.Id, userDto.Role);
                 // создаем профиль клиента
                 UserProfile clientProfile = new UserProfile { Id = user.Id, Address = userDto.Address, Name = userDto.Name };
-                Database.UserProfileRepository.Create(clientProfile);
-                await Database.SaveAsync();
+                _db.UserProfileRepository.Create(clientProfile);
+                await _db.SaveAsync();
                 return new OperationDetails(true, "Регистрация успешно пройдена", "");
             }
             else
@@ -49,10 +49,10 @@ namespace TaskTrackingSystem.BLL.Services
         {
             ClaimsIdentity claim = null;
             // находим пользователя
-            ApplicationUser user = await Database.UserManager.FindAsync(userDto.Email, userDto.Password);
+            ApplicationUser user = await _db.UserManager.FindAsync(userDto.Email, userDto.Password);
             // авторизуем его и возвращаем объект ClaimsIdentity
             if (user != null)
-                claim = await Database.UserManager.CreateIdentityAsync(user,
+                claim = await _db.UserManager.CreateIdentityAsync(user,
                                             DefaultAuthenticationTypes.ApplicationCookie);
             return claim;
         }
@@ -62,11 +62,11 @@ namespace TaskTrackingSystem.BLL.Services
         {
             foreach (string roleName in roles)
             {
-                var role = await Database.RoleManager.FindByNameAsync(roleName);
+                var role = await _db.RoleManager.FindByNameAsync(roleName);
                 if (role == null)
                 {
                     role = new ApplicationRole { Name = roleName };
-                    await Database.RoleManager.CreateAsync(role);
+                    await _db.RoleManager.CreateAsync(role);
                 }
             }
             await Create(adminDto);
@@ -74,7 +74,7 @@ namespace TaskTrackingSystem.BLL.Services
 
         public void Dispose()
         {
-            Database.Dispose();
+            _db.Dispose();
         }
 
         public void Remove(UserDTO userDTO)
@@ -90,6 +90,21 @@ namespace TaskTrackingSystem.BLL.Services
         public UserDTO GetUserById(int id)
         {
             throw new NotImplementedException();
+        }
+
+        public IEnumerable<UserDTO> GetAll()
+        {
+            List<ApplicationUser> appList = _db.UserManager.Users.ToList();
+            List<UserProfile> userProfile = _db.UserProfileRepository.GetAll().ToList();
+            List<UserDTO> usersDTO = new List<UserDTO>();
+            for(int i = 0; i < appList.Count(); i++)
+            {
+                UserDTO userDTO = new UserDTO() { Id = appList[i].Id, Email = appList[i].Email,
+                    Address = userProfile[i].Address, Name = userProfile[i].Name, Password = appList[i].PasswordHash
+                    , Role = _db.UserManager.GetRoles(appList[i].Id)[0], UserName = appList[i].UserName};
+                usersDTO.Add(userDTO);
+            }
+            return usersDTO;
         }
     }
 }

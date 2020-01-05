@@ -12,7 +12,7 @@ namespace TaskTrackingSystem.DAL.Entities
         public string Name { get; set; }
         public string Status { get; set; }
 
-        public int ClientId { get; set; }
+        public string ClientId { get; set; }
         public UserProfile Client { get; set; }
         public DateTime DataStart { get; set; }
         public DateTime DataEnd { get; set; }

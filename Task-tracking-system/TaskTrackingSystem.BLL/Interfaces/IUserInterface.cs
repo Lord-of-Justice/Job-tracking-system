@@ -9,7 +9,7 @@ using TaskTrackingSystem.BLL.Infrastructure;
 
 namespace TaskTrackingSystem.BLL.Interfaces
 {
-    public interface IUserInterface
+    public interface IUserInterface : IDisposable
     {
         Task<OperationDetails> Create(UserDTO userDto);
         Task<ClaimsIdentity> Authenticate(UserDTO userDto);
@@ -17,5 +17,6 @@ namespace TaskTrackingSystem.BLL.Interfaces
         void Remove(UserDTO userDTO);
         void Update(UserDTO userDTO);
         UserDTO GetUserById(int id);
+        IEnumerable<UserDTO> GetAll();
     }
 }

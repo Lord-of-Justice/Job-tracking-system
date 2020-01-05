@@ -9,7 +9,7 @@ using TaskTrackingSystem.DAL.Entities;
 
 namespace TaskTrackingSystem.DAL.EF
 {
-    class TaskTrackerContext : IdentityDbContext<ApplicationUser>
+    public class TaskTrackerContext : IdentityDbContext<ApplicationUser>
     {
         public TaskTrackerContext() : base("TaskTrackerContext", throwIfV1Schema: false) { }
         public TaskTrackerContext(string connectionString) : base(connectionString) { }

@@ -10,7 +10,7 @@ using TaskTrackingSystem.DAL.Repositories;
 
 namespace TaskTrackingSystem.BLL.Infrastructure
 {
-    class ServiceModule : NinjectModule
+    public class ServiceModule : NinjectModule
     {
         private string connectionString;
         public ServiceModule(string connectionString)

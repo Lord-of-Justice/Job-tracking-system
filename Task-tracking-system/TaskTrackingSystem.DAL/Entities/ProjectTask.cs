@@ -13,10 +13,10 @@ namespace TaskTrackingSystem.DAL.Entities
         public string Status { get; set; }
         public double PercentageOfExecution { get; set; }
 
-        public int? EmployeeId { get; set; }
+        public string EmployeeId { get; set; }
         public UserProfile Employee { get; set; }
         [Column("IssuedById")]
-        public int? IssuedById { get; set; }
+        public string IssuedById { get; set; }
         public UserProfile IssuedBy { get; set; }
 
         public int ProjectId { get; set; }

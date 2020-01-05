@@ -11,14 +11,18 @@ using AutoMapper;
 
 namespace TaskTrackingSystem.BLL.Services
 {
-    class ProjectService : IService<ProjectDTO>
+    public class ProjectService : IService<ProjectDTO>
     {
         private readonly IUnitOfWork _db;
         private readonly IMapper _mapper;
-        public ProjectService(IUnitOfWork db, IMapper mapper)
+        public ProjectService(IUnitOfWork db)
         {
             _db = db;
-            _mapper = mapper;
+            var config = new MapperConfiguration(cfg => {
+                cfg.CreateMap<ProjectDTO, Project>();
+                cfg.CreateMap<Project, ProjectDTO>();
+            });
+            _mapper = new Mapper(config);
         }
         public async void Create(ProjectDTO item)
         {

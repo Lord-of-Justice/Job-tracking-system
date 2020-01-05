@@ -63,14 +63,14 @@
     <Compile Include="Entities\ProjectTask.cs" />
     <Compile Include="Entities\ApplicationUser.cs" />
     <Compile Include="Entities\UserProfile.cs" />
-    <Compile Include="Indentity\ApplicationRoleManager.cs" />
     <Compile Include="Indentity\ApplicationUserManager.cs" />
+    <Compile Include="Indentity\ApplicationRoleManager.cs" />
     <Compile Include="Interfaces\IRepository.cs" />
     <Compile Include="Interfaces\IUnitOfWork.cs" />
     <Compile Include="Interfaces\IUserProfileRepository.cs" />
-    <Compile Include="Migrations\202001041846430_CreateDb.cs" />
-    <Compile Include="Migrations\202001041846430_CreateDb.designer.cs">
-      <DependentUpon>202001041846430_CreateDb.cs</DependentUpon>
+    <Compile Include="Migrations\202001052018425_initDB.cs" />
+    <Compile Include="Migrations\202001052018425_initDB.designer.cs">
+      <DependentUpon>202001052018425_initDB.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -84,8 +84,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202001041846430_CreateDb.resx">
-      <DependentUpon>202001041846430_CreateDb.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202001052018425_initDB.resx">
+      <DependentUpon>202001052018425_initDB.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

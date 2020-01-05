@@ -10,7 +10,7 @@ using TaskTrackingSystem.DAL.Interfaces;
 
 namespace TaskTrackingSystem.DAL.Repositories
 {
-    class ProjectTaskRepository : IRepository<ProjectTask>
+    public class ProjectTaskRepository : IRepository<ProjectTask>
     {
         private TaskTrackerContext context;
         public ProjectTaskRepository(TaskTrackerContext context)

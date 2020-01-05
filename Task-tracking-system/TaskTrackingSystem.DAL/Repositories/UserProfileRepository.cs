@@ -10,7 +10,7 @@ using TaskTrackingSystem.DAL.Interfaces;
 
 namespace TaskTrackingSystem.DAL.Repositories
 {
-    class UserProfileRepository : IUserProfileRepository
+    public class UserProfileRepository : IUserProfileRepository
     {
         private TaskTrackerContext context;
         public UserProfileRepository(TaskTrackerContext context)

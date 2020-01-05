@@ -9,6 +9,7 @@ namespace TaskTrackingSystem.DAL.Interfaces
     {
         void Create(UserProfile user);
         UserProfile GetById(int id);
+        IEnumerable<UserProfile> GetAll();
         void Remove(UserProfile user);
         void Update(UserProfile user);
     }

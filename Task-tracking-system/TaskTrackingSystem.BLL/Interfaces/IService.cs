@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TaskTrackingSystem.BLL.Interfaces
 {
-    interface IService<T>
+    public interface IService<T>
     {
         void Create(T item);
         T GetById(int id);
