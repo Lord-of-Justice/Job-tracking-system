@@ -12,7 +12,7 @@ namespace TaskTrackingSystem.BLL.Interfaces
     public interface IUserInterface : IDisposable
     {
         Task<OperationDetails> Create(UserDTO userDto);
-        Task<ClaimsIdentity> Authenticate(UserDTO userDto);
+        Task<UserDTO> Authenticate(string userName, string password);
         Task SetInitialData(UserDTO adminDto, List<string> roles);
         void Remove(UserDTO userDTO);
         void Update(UserDTO userDTO);

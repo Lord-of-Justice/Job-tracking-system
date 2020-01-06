@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using TaskTrackingSystem.BLL.Infrastructure;
 using TaskTrackingSystem.BLL.DTO;
@@ -42,33 +40,29 @@ namespace TaskTrackingSystem.BLL.Services
                 var result = await Db.UserManager.CreateAsync(user, userDto.Password);
                 if (result.Errors.Count() > 0)
                     return new OperationDetails(false, result.Errors.FirstOrDefault(), "");
-                // добавляем роль
                 await Db.UserManager.AddToRoleAsync(user.Id, userDto.Role);
-                // создаем профиль клиента
                 UserProfile clientProfile = new UserProfile { Id = user.Id, Address = userDto.Address, Name = userDto.Name };
                 Db.UserProfileRepository.Create(clientProfile);
                 await Db.SaveAsync();
-                return new OperationDetails(true, "Регистрация успешно пройдена", "");
+                return new OperationDetails(true, "Registration successful", "");
             }
             else
             {
-                return new OperationDetails(false, "Пользователь с таким логином уже существует", "Email");
+                return new OperationDetails(false, "User with this id is alreade in db", "Email");
             }
         }
 
-        public async Task<ClaimsIdentity> Authenticate(UserDTO userDto)
+        public async Task<UserDTO> Authenticate(string userName, string password)
         {
             ClaimsIdentity claim = null;
-            // находим пользователя
-            ApplicationUser user = await Db.UserManager.FindAsync(userDto.Email, userDto.Password);
-            // авторизуем его и возвращаем объект ClaimsIdentity
-            if (user != null)
-                claim = await Db.UserManager.CreateIdentityAsync(user,
-                                            DefaultAuthenticationTypes.ApplicationCookie);
-            return claim;
+            ApplicationUser userApp = await Db.UserManager.FindAsync(userName, password);
+            UserDTO userDTO = createUserDTO(userApp, new UserProfile());
+            return userDTO;
+            //if (user != null)
+            //    claim = await Db.UserManager.CreateIdentityAsync(user,
+            //                                DefaultAuthenticationTypes.ApplicationCookie);
+            //return claim;
         }
-
-        // начальная инициализация бд
         public async Task SetInitialData(UserDTO adminDto, List<string> roles)
         {
             foreach (string roleName in roles)

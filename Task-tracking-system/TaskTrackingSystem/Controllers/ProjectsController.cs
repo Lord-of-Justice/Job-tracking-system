@@ -32,6 +32,7 @@ namespace TaskTrackingSystem.Controllers
         }
         // GET: api/projects
         [HttpGet]
+        [Authorize(Roles = "admin, manager")]
         [Route("projects")]
         public IEnumerable<ProjectVM> Get()
         {

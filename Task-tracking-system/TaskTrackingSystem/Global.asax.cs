@@ -18,12 +18,6 @@ namespace TaskTrackingSystem
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-
-            // внедрение зависимостей
-            /*NinjectModule projectModule = new ProjectModule();
-            NinjectModule serviceModule = new ServiceModule("DefaultConnection");
-            var kernel = new StandardKernel(projectModule, serviceModule);
-            DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));*/
         }
     }
 }
