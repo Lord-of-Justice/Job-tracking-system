@@ -72,6 +72,14 @@
     <Compile Include="Migrations\202001052018425_initDB.designer.cs">
       <DependentUpon>202001052018425_initDB.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001060933264_UpdateUser.cs" />
+    <Compile Include="Migrations\202001060933264_UpdateUser.designer.cs">
+      <DependentUpon>202001060933264_UpdateUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202001060949089_UpdateUser2.cs" />
+    <Compile Include="Migrations\202001060949089_UpdateUser2.designer.cs">
+      <DependentUpon>202001060949089_UpdateUser2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\ProjectRepository.cs" />
@@ -86,6 +94,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202001052018425_initDB.resx">
       <DependentUpon>202001052018425_initDB.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001060933264_UpdateUser.resx">
+      <DependentUpon>202001060933264_UpdateUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001060949089_UpdateUser2.resx">
+      <DependentUpon>202001060949089_UpdateUser2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

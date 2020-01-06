@@ -80,5 +80,9 @@ namespace TaskTrackingSystem.DAL.Repositories
         {
             await db.SaveChangesAsync();
         }
+        public void SaveChanges()
+        {
+            db.SaveChanges();
+        }
     }
 }

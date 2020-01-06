@@ -13,8 +13,8 @@ namespace TaskTrackingSystem.Models
         public string Status { get; set; }
         public double PercentageOfExecution { get; set; }
 
-        public UserVM Employee { get; set; }
-        public UserVM IssuedBy { get; set; }
-        public ProjectVM Project { get; set; }
+        public string EmployeeId { get; set; }
+        public string IssuedById { get; set; }
+        public int ProjectId { get; set; }
     }
 }

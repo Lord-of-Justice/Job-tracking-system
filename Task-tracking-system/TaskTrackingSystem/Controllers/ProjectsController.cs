@@ -7,13 +7,12 @@ using System.Net.Http;
 using System.Web.Http;
 using TaskTrackingSystem.BLL.Interfaces;
 using TaskTrackingSystem.BLL.DTO;
-using TaskTrackingSystem.BLL.Services;
 using TaskTrackingSystem.Models;
 using AutoMapper;
 
 namespace TaskTrackingSystem.Controllers
 {
-    [RoutePrefix("api/projects")]
+    [RoutePrefix("api")]
     public class ProjectsController : ApiController
     {
         private IService<ProjectDTO> _projectService;
@@ -26,19 +25,22 @@ namespace TaskTrackingSystem.Controllers
             {
                 cfg.CreateMap<ProjectVM, ProjectDTO>();
                 cfg.CreateMap<ProjectDTO, ProjectVM>();
+                cfg.CreateMap<UserVM, UserDTO>();
+                cfg.CreateMap<UserDTO, UserVM>();
             });
             _mapper = new Mapper(config);
         }
-        // GET: api/Project
+        // GET: api/projects
         [HttpGet]
-        [Route("getAll")]
+        [Route("projects")]
         public IEnumerable<ProjectVM> Get()
         {
             return _mapper.Map<IEnumerable<ProjectVM>>(_projectService.GetAll());
         }
 
-        // GET: api/Project/5
+        // GET: api/projects/5
         [HttpGet]
+        [Route("projects/{id}", Name = "GetProject")]
         public IHttpActionResult Get(int id)
         {
             var projectVM = _mapper.Map<ProjectVM>(_projectService.GetById(id));
@@ -49,27 +51,52 @@ namespace TaskTrackingSystem.Controllers
             return Ok(projectVM);
         }
 
-        // POST: api/Project
+        // POST: api/projects/new
         [HttpPost]
-        public IHttpActionResult Post([FromBody] ProjectVM project)
+        [Route("projects/new")]
+        public IHttpActionResult Post([FromBody] ProjectVM projectVM)
         {
-            if (project == null)
+            if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
-            var projectDTO = _mapper.Map<ProjectDTO>(project);
+            var projectDTO = _mapper.Map<ProjectDTO>(projectVM);
             _projectService.Create(projectDTO);
-            return CreatedAtRoute("Get", new { id = project.Id }, project);
+            return CreatedAtRoute("GetProject", new { id = projectVM.Id }, projectVM);
         }
 
-        // PUT api/<controller>/5
-        public void Put(int id, [FromBody]string value)
+        // POST api/projects/update
+        [HttpPost]
+        [Route("projects/update")]
+        public IHttpActionResult Put([FromBody]ProjectVM projectVM)
         {
+            var sourceProject = _projectService.GetById(projectVM.Id);
+            if (sourceProject == null)
+            {
+                return NotFound();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var projectDTO = _mapper.Map<ProjectDTO>(projectVM);
+            _projectService.Update(projectDTO);
+            return CreatedAtRoute("GetProject", new { id = projectVM.Id }, projectVM);
         }
 
-        // DELETE api/<controller>/5
-        public void Delete(int id)
+        // POST api/projects/delete
+        [HttpPost]
+        [Route("projects/delete")]
+        public IHttpActionResult Delete([FromBody]ProjectVM projectVM)
         {
+            var sourceProject = _projectService.GetById(projectVM.Id);
+            if (sourceProject == null)
+            {
+                return NotFound();
+            }
+            _projectService.Remove(sourceProject);
+            return Ok();
         }
     }
 }

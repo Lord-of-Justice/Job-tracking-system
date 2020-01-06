@@ -33,7 +33,7 @@ namespace TaskTrackingSystem.DAL.Repositories
             return context.UserProfile;
         }
 
-        public UserProfile GetById(int id)
+        public UserProfile GetById(string id)
         {
             return context.UserProfile.Find(id); 
         }

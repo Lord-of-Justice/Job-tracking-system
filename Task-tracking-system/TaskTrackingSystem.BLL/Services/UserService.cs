@@ -10,33 +10,44 @@ using TaskTrackingSystem.DAL.Entities;
 using TaskTrackingSystem.DAL.Interfaces;
 using System.Security.Claims;
 using Microsoft.AspNet.Identity;
+using AutoMapper;
 
 namespace TaskTrackingSystem.BLL.Services
 {
     public class UserService : IUserInterface
     {
-        IUnitOfWork _db { get; set; }
-
+        private IMapper _mapper;
         public UserService(IUnitOfWork uow)
         {
-            _db = uow;
-        }
+            Db = uow;
+            var config = new MapperConfiguration(cfg => {
+                cfg.CreateMap<UserProfile, UserDTO>();
+                cfg.CreateMap<UserDTO, UserProfile>();
 
+                cfg.CreateMap<ApplicationUser, UserDTO>();
+                cfg.CreateMap<UserDTO, ApplicationUser>();
+
+                cfg.CreateMap<ApplicationRole, UserDTO>();
+                cfg.CreateMap<UserDTO, ApplicationRole>();
+            });
+            _mapper = new Mapper(config);
+        }
+        IUnitOfWork Db { get; set; }
         public async Task<OperationDetails> Create(UserDTO userDto)
         {
-            ApplicationUser user = await _db.UserManager.FindByEmailAsync(userDto.Email);
+            ApplicationUser user = await Db.UserManager.FindByEmailAsync(userDto.Email);
             if (user == null)
             {
                 user = new ApplicationUser { Email = userDto.Email, UserName = userDto.Email };
-                var result = await _db.UserManager.CreateAsync(user, userDto.Password);
+                var result = await Db.UserManager.CreateAsync(user, userDto.Password);
                 if (result.Errors.Count() > 0)
                     return new OperationDetails(false, result.Errors.FirstOrDefault(), "");
                 // добавляем роль
-                await _db.UserManager.AddToRoleAsync(user.Id, userDto.Role);
+                await Db.UserManager.AddToRoleAsync(user.Id, userDto.Role);
                 // создаем профиль клиента
                 UserProfile clientProfile = new UserProfile { Id = user.Id, Address = userDto.Address, Name = userDto.Name };
-                _db.UserProfileRepository.Create(clientProfile);
-                await _db.SaveAsync();
+                Db.UserProfileRepository.Create(clientProfile);
+                await Db.SaveAsync();
                 return new OperationDetails(true, "Регистрация успешно пройдена", "");
             }
             else
@@ -49,10 +60,10 @@ namespace TaskTrackingSystem.BLL.Services
         {
             ClaimsIdentity claim = null;
             // находим пользователя
-            ApplicationUser user = await _db.UserManager.FindAsync(userDto.Email, userDto.Password);
+            ApplicationUser user = await Db.UserManager.FindAsync(userDto.Email, userDto.Password);
             // авторизуем его и возвращаем объект ClaimsIdentity
             if (user != null)
-                claim = await _db.UserManager.CreateIdentityAsync(user,
+                claim = await Db.UserManager.CreateIdentityAsync(user,
                                             DefaultAuthenticationTypes.ApplicationCookie);
             return claim;
         }
@@ -62,11 +73,11 @@ namespace TaskTrackingSystem.BLL.Services
         {
             foreach (string roleName in roles)
             {
-                var role = await _db.RoleManager.FindByNameAsync(roleName);
+                var role = await Db.RoleManager.FindByNameAsync(roleName);
                 if (role == null)
                 {
                     role = new ApplicationRole { Name = roleName };
-                    await _db.RoleManager.CreateAsync(role);
+                    await Db.RoleManager.CreateAsync(role);
                 }
             }
             await Create(adminDto);
@@ -74,37 +85,68 @@ namespace TaskTrackingSystem.BLL.Services
 
         public void Dispose()
         {
-            _db.Dispose();
+            Db.Dispose();
         }
 
         public void Remove(UserDTO userDTO)
         {
-            throw new NotImplementedException();
+            var appUser = Db.UserManager.FindById(userDTO.Id);
+            appUser = _mapper.Map(userDTO, appUser);
+            Db.UserManager.Delete(appUser);
+            Db.SaveChanges();
         }
 
         public void Update(UserDTO userDTO)
         {
-            throw new NotImplementedException();
+            var userProfile = Db.UserProfileRepository.GetById(userDTO.Id);
+            userProfile = _mapper.Map(userDTO, userProfile);
+            Db.UserProfileRepository.Update(userProfile);
+            
+            var appUser = Db.UserManager.FindById(userDTO.Id);
+            // for updating role
+            var oldRoleId = appUser.Roles.SingleOrDefault().RoleId;
+            var oldRoleName = Db.RoleManager.FindById(oldRoleId).Name;
+            if (oldRoleName != userDTO.Role)
+            {
+                Db.UserManager.RemoveFromRole(userDTO.Id, oldRoleName);
+                Db.UserManager.AddToRole(userDTO.Id, userDTO.Role);
+            }
+            appUser = _mapper.Map(userDTO, appUser);
+            Db.UserManager.Update(appUser);
+            Db.SaveChanges();
         }
 
-        public UserDTO GetUserById(int id)
+        public UserDTO GetUserById(string id)
         {
-            throw new NotImplementedException();
+            ApplicationUser appUser = Db.UserManager.FindById(id);
+            UserProfile profile = Db.UserProfileRepository.GetById(id);
+            return createUserDTO(appUser, profile);
         }
 
         public IEnumerable<UserDTO> GetAll()
         {
-            List<ApplicationUser> appList = _db.UserManager.Users.ToList();
-            List<UserProfile> userProfile = _db.UserProfileRepository.GetAll().ToList();
+            List<ApplicationUser> appList = Db.UserManager.Users.ToList();
+            List<UserProfile> userProfile = Db.UserProfileRepository.GetAll().ToList();
             List<UserDTO> usersDTO = new List<UserDTO>();
             for(int i = 0; i < appList.Count(); i++)
-            {
-                UserDTO userDTO = new UserDTO() { Id = appList[i].Id, Email = appList[i].Email,
-                    Address = userProfile[i].Address, Name = userProfile[i].Name, Password = appList[i].PasswordHash
-                    , Role = _db.UserManager.GetRoles(appList[i].Id)[0], UserName = appList[i].UserName};
-                usersDTO.Add(userDTO);
+            {                
+                usersDTO.Add(createUserDTO(appList[i], userProfile[i]));
             }
             return usersDTO;
+        }
+
+        private UserDTO createUserDTO(ApplicationUser appUser, UserProfile profile) 
+        {
+            return new UserDTO()
+            {
+                Id = appUser.Id,
+                Email = appUser.Email,
+                Address = profile.Address,
+                Name = profile.Name,
+                Password = appUser.PasswordHash,
+                Role = Db.UserManager.GetRoles(appUser.Id)[0],
+                UserName = appUser.UserName
+            };
         }
     }
 }

@@ -26,11 +26,11 @@ namespace TaskTrackingSystem.BLL.Services
             }) ;
             _mapper = new Mapper(config);
         }
-        public async void Create(ProjectTaskDTO item)
+        public void Create(ProjectTaskDTO item)
         {
             var project = _mapper.Map<ProjectTask>(item);
             _db.ProjectTaskRepository.Create(project);
-            await _db.SaveAsync();
+            _db.SaveChanges();
         }
 
         public IEnumerable<ProjectTaskDTO> GetAll()
@@ -43,18 +43,20 @@ namespace TaskTrackingSystem.BLL.Services
             return _mapper.Map<ProjectTaskDTO>(_db.ProjectTaskRepository.GetById(id));
         }
 
-        public async void Remove(ProjectTaskDTO item)
+        public void Remove(ProjectTaskDTO item)
         {
-            var project = _mapper.Map<ProjectTask>(item);
+            var project = _db.ProjectTaskRepository.GetById(item.Id);
+            project = _mapper.Map(item, project);
             _db.ProjectTaskRepository.Remove(project);
-            await _db.SaveAsync();
+            _db.SaveChanges();
         }
 
-        public async void Update(ProjectTaskDTO item)
+        public void Update(ProjectTaskDTO item)
         {
-            var project = _mapper.Map<ProjectTask>(item);
+            var project = _db.ProjectTaskRepository.GetById(item.Id);
+            project = _mapper.Map(item, project);
             _db.ProjectTaskRepository.Update(project);
-            await _db.SaveAsync();
+            _db.SaveChanges();
         }
     }
 }

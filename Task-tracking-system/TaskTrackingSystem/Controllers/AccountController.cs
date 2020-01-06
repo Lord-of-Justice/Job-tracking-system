@@ -14,14 +14,6 @@ namespace TaskTrackingSystem.Controllers
 {
     public class AccountController : Controller
     {
-        private IUserInterface UserService
-        {
-            get
-            {
-                return HttpContext.GetOwinContext().GetUserManager<IUserInterface>();
-            }
-        }
- 
         private IAuthenticationManager AuthenticationManager
         {
             get
@@ -29,32 +21,11 @@ namespace TaskTrackingSystem.Controllers
                 return HttpContext.GetOwinContext().Authentication;
             }
         }
-        // GET: api/Account
-        /*public IEnumerable<string> Get()
+        private IUserInterface UserService;
+        public AccountController(IUserInterface service)
         {
-            return new string[] { "value1", "value2" };
+            UserService = service;
         }
-
-        // GET: api/Account/5
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST: api/Account
-        public void Post(string value)
-        {
-        }
-
-        // PUT: api/Account/5
-        public void Put(int id, string value)
-        {
-        }
-
-        // DELETE: api/Account/5
-        public void Delete(int id)
-        {
-        }*/
         public ActionResult Login()
         {
             return View();

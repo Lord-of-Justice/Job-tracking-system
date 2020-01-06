@@ -16,5 +16,6 @@ namespace TaskTrackingSystem.DAL.Interfaces
         IRepository<Project> ProjectRepository { get; }
         IUserProfileRepository UserProfileRepository { get; }
         Task SaveAsync();
+        void SaveChanges();
     }
 }

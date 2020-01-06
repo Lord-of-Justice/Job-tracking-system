@@ -8,7 +8,7 @@ namespace TaskTrackingSystem.DAL.Interfaces
     public interface IUserProfileRepository : IDisposable
     {
         void Create(UserProfile user);
-        UserProfile GetById(int id);
+        UserProfile GetById(string id);
         IEnumerable<UserProfile> GetAll();
         void Remove(UserProfile user);
         void Update(UserProfile user);

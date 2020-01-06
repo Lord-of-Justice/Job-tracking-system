@@ -14,6 +14,9 @@ namespace TaskTrackingSystem.DAL.Entities
         public string Name { get; set; }
         public string Address { get; set; }
 
+        public virtual ICollection<ProjectTask> Tasks { get; set; }
+        public virtual ICollection<Project> Projects { get; set; }
+
         public virtual ApplicationUser ApplicationUser { get; set; }
     }
 }

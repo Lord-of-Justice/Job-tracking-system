@@ -14,8 +14,11 @@ namespace TaskTrackingSystem.BLL.DTO
         public string Status { get; set; }
         public double PercentageOfExecution { get; set; }
 
+        public string EmployeeId { get; set; }
         public UserDTO Employee { get; set; }
+        public string IssuedById { get; set; }
         public UserDTO IssuedBy { get; set; }
+        public int ProjectId { get; set; }
         public ProjectDTO Project { get; set; }
     }
 }

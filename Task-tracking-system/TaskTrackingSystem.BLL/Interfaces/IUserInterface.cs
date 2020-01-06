@@ -16,7 +16,7 @@ namespace TaskTrackingSystem.BLL.Interfaces
         Task SetInitialData(UserDTO adminDto, List<string> roles);
         void Remove(UserDTO userDTO);
         void Update(UserDTO userDTO);
-        UserDTO GetUserById(int id);
+        UserDTO GetUserById(string id);
         IEnumerable<UserDTO> GetAll();
     }
 }

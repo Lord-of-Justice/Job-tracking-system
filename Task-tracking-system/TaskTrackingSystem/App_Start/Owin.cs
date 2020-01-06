@@ -26,7 +26,7 @@ namespace TaskTrackingSystem.App_Start
         /// </param>
         public void Configuration(IAppBuilder app)
         {
-            app.CreatePerOwinContext<IUserInterface>(CreateUserService);
+            //app.CreatePerOwinContext<IUserInterface>(CreateUserService);
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,

@@ -21,14 +21,19 @@ namespace TaskTrackingSystem.BLL.Services
             var config = new MapperConfiguration(cfg => {
                 cfg.CreateMap<ProjectDTO, Project>();
                 cfg.CreateMap<Project, ProjectDTO>();
+                cfg.CreateMap<UserProfile, UserDTO>();
+                cfg.CreateMap<UserDTO, UserProfile>();
+
+                cfg.CreateMap<ApplicationUser, UserDTO>();
+                cfg.CreateMap<UserDTO, ApplicationUser>();
             });
             _mapper = new Mapper(config);
         }
-        public async void Create(ProjectDTO item)
+        public void Create(ProjectDTO item)
         {
             var project = _mapper.Map<Project>(item);
             _db.ProjectRepository.Create(project);
-            await _db.SaveAsync();
+            _db.SaveChanges();
         }
 
         public IEnumerable<ProjectDTO> GetAll()
@@ -41,18 +46,20 @@ namespace TaskTrackingSystem.BLL.Services
             return _mapper.Map<ProjectDTO>(_db.ProjectRepository.GetById(id));
         }
 
-        public async void Remove(ProjectDTO item)
+        public void Remove(ProjectDTO item)
         {
-            var project = _mapper.Map<Project>(item);
+            var project = _db.ProjectRepository.GetById(item.Id);
+            project = _mapper.Map(item, project);
             _db.ProjectRepository.Remove(project);
-            await _db.SaveAsync();
+            _db.SaveChanges();
         }
 
-        public async void Update(ProjectDTO item)
+        public void Update(ProjectDTO item)
         {
-            var project = _mapper.Map<Project>(item);
+            var project = _db.ProjectRepository.GetById(item.Id);
+            project = _mapper.Map(item, project);
             _db.ProjectRepository.Update(project);
-            await _db.SaveAsync();
+            _db.SaveChanges();
         }
     }
 }
