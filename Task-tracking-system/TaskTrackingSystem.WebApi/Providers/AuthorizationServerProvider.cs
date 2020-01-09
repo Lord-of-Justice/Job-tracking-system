@@ -7,13 +7,25 @@ using TaskTrackingSystem.DAL.Repositories;
 
 namespace TaskTrackingSystem.WebApi.Providers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class AuthorizationServerProvider : OAuthAuthorizationServerProvider
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public override async Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
         {
             await Task.Run(() => context.Validated());
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
             context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { "*" });

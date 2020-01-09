@@ -12,8 +12,8 @@ namespace TaskTrackingSystem.DAL.Interfaces
     {
         ApplicationUserManager UserManager { get; }
         ApplicationRoleManager RoleManager { get; }
-        IRepository<ProjectTask> ProjectTaskRepository { get; }
-        IRepository<Project> ProjectRepository { get; }
+        IProjectTaskRepository ProjectTaskRepository { get; }
+        IProjectRepository ProjectRepository { get; }
         IUserProfileRepository UserProfileRepository { get; }
         Task SaveAsync();
         void SaveChanges();

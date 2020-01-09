@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskTrackingSystem.BLL", "T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskTrackingSystem.WebApi", "TaskTrackingSystem.WebApi\TaskTrackingSystem.WebApi.csproj", "{AE0C2F8E-F903-4EB0-BE26-DA93146CEFF7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskTrackingSystem.Web", "TaskTrackingSystem.Web\TaskTrackingSystem.Web.csproj", "{B41E014C-E961-455E-9577-41C5A318E7CF}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{AE0C2F8E-F903-4EB0-BE26-DA93146CEFF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE0C2F8E-F903-4EB0-BE26-DA93146CEFF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE0C2F8E-F903-4EB0-BE26-DA93146CEFF7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B41E014C-E961-455E-9577-41C5A318E7CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B41E014C-E961-455E-9577-41C5A318E7CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B41E014C-E961-455E-9577-41C5A318E7CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B41E014C-E961-455E-9577-41C5A318E7CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

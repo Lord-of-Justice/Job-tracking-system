@@ -13,7 +13,7 @@ using AutoMapper;
 
 namespace TaskTrackingSystem.BLL.Services
 {
-    public class ProjectTaskService : IService<ProjectTaskDTO>
+    public class ProjectTaskService : IProjectTaskService
     {
         private readonly IUnitOfWork _db;
         private readonly IMapper _mapper;

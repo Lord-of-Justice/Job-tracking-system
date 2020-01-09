@@ -8,16 +8,24 @@ using AutoMapper;
 using TaskTrackingSystem.BLL.Interfaces;
 using TaskTrackingSystem.BLL.DTO;
 using TaskTrackingSystem.WebApi.Models;
+using System.Web.Http.Description;
 
 namespace TaskTrackingSystem.WebApi.Controllers
 {
+    /// <summary>
+    /// ProjectTask api
+    /// </summary>
     [RoutePrefix("api")]
+    [Authorize(Roles = "admin, manager, employee")]
     public class ProjectTasksController : ApiController
     {
-        private IService<ProjectTaskDTO> _projectTaskService;
+        private IProjectTaskService _projectTaskService;
         private IMapper _mapper;
-
-        public ProjectTasksController(IService<ProjectTaskDTO> service)
+        /// <summary>
+        /// ProjectTask Controller constructor
+        /// </summary>
+        /// <param name="service">Service for crud ProjectTasks</param>
+        public ProjectTasksController(IProjectTaskService service)
         {
             _projectTaskService = service;
             var config = new MapperConfiguration(cfg =>
@@ -27,17 +35,37 @@ namespace TaskTrackingSystem.WebApi.Controllers
             });
             _mapper = new Mapper(config);
         }
-        // GET: api/projecttask
+        /// <summary>
+        /// Get all ProjectTasks
+        /// </summary>
+        /// <remarks>
+        /// Get a list of all ProjectTasks
+        /// </remarks>
+        /// <returns></returns>
+        /// <response code="200"></response> 
+        [ResponseType(typeof(IEnumerable<ProjectTaskVM>))]
         [HttpGet]
         [Route("projecttask")]
+        // GET: api/projecttask
         public IEnumerable<ProjectTaskVM> Get()
         {
             return _mapper.Map<IEnumerable<ProjectTaskVM>>(_projectTaskService.GetAll());
         }
 
-        // GET: api/projecttask/5
+        /// <summary>
+        /// Get ProjectTask by id
+        /// </summary>
+        /// <remarks>
+        /// Get a ProjectTask by id
+        /// </remarks>
+        /// <param name="id">Id of ProjectTask</param>
+        /// <returns></returns>
+        /// <response code="200">ProjectTask found</response>
+        ///<response code = "404" > ProjectTask not foundd</response>
+        [ResponseType(typeof(ProjectTaskVM))]
         [HttpGet]
         [Route("projecttask/{id}", Name = "GetProjectTask")]
+        // GET: api/projecttask/5
         public IHttpActionResult Get(int id)
         {
             var projectTaskVM = _mapper.Map<ProjectTaskVM>(_projectTaskService.GetById(id));
@@ -48,9 +76,20 @@ namespace TaskTrackingSystem.WebApi.Controllers
             return Ok(projectTaskVM);
         }
 
-        // POST: api/projecttask/new
+        /// <summary>
+        /// Create a ProjectTask
+        /// </summary>
+        /// <remarks>
+        /// Create a new ProjectTask
+        /// </remarks>
+        /// <param name="projectTaskVM">ProjectTask for creation</param>
+        /// <returns></returns>
+        /// <response code="200">ProjectTask created</response>
+        /// <response code="400">Bad request</response>
+        [ResponseType(typeof(ProjectTaskVM))]
         [HttpPost]
         [Route("projecttask/new")]
+        // POST: api/projecttask/new
         public IHttpActionResult Post([FromBody] ProjectTaskVM projectTaskVM)
         {
             if (!ModelState.IsValid)
@@ -62,9 +101,18 @@ namespace TaskTrackingSystem.WebApi.Controllers
             return CreatedAtRoute("GetProjectTask", new { id = projectTaskVM.Id }, projectTaskVM);
         }
 
-        // PUT api/projecttask/update
+        /// <summary>
+        /// Update an existing ProjectTask
+        /// </summary>
+        /// <param name="projectTaskVM">ProjectTask to update</param>
+        /// <returns></returns>
+        /// <response code="200">ProjectTask updated</response>
+        /// <response code="404">ProjectTask not found</response>
+
+        [ResponseType(typeof(ProjectTaskVM))]
         [HttpPost]
         [Route("projecttask/update")]
+        // PUT api/projecttask/update
         public IHttpActionResult Put([FromBody]ProjectTaskVM projectTaskVM)
         {
             var sourceProject = _projectTaskService.GetById(projectTaskVM.Id);
@@ -82,9 +130,19 @@ namespace TaskTrackingSystem.WebApi.Controllers
             return CreatedAtRoute("GetProjectTask", new { id = projectTaskVM.Id }, projectTaskVM);
         }
 
-        // DELETE api/projecttask/delete
+        /// <summary>
+        /// Delete a ProjectTask
+        /// </summary>
+        /// <remarks>
+        /// Delete a ProjectTask
+        /// </remarks>
+        /// <param name="projectTaskVM">ProjectTask to delete</param>
+        /// <returns></returns>
+        /// <response code="200">ProjectTask deleted</response>
+        /// <response code="404">ProjectTask not found</response>
         [HttpPost]
         [Route("projecttask/delete")]
+        // DELETE api/projecttask/delete
         public IHttpActionResult Delete([FromBody]ProjectTaskVM projectTaskVM)
         {
             var sourceProject = _projectTaskService.GetById(projectTaskVM.Id);

@@ -11,7 +11,7 @@ using AutoMapper;
 
 namespace TaskTrackingSystem.BLL.Services
 {
-    public class ProjectService : IService<ProjectDTO>
+    public class ProjectService : IProjectService
     {
         private readonly IUnitOfWork _db;
         private readonly IMapper _mapper;
@@ -21,6 +21,8 @@ namespace TaskTrackingSystem.BLL.Services
             var config = new MapperConfiguration(cfg => {
                 cfg.CreateMap<ProjectDTO, Project>();
                 cfg.CreateMap<Project, ProjectDTO>();
+                cfg.CreateMap<ProjectTaskDTO, ProjectTask>();
+                cfg.CreateMap<ProjectTask, ProjectTaskDTO>();
                 cfg.CreateMap<UserProfile, UserDTO>();
                 cfg.CreateMap<UserDTO, UserProfile>();
 
@@ -60,6 +62,10 @@ namespace TaskTrackingSystem.BLL.Services
             project = _mapper.Map(item, project);
             _db.ProjectRepository.Update(project);
             _db.SaveChanges();
+        }
+        public IEnumerable<ProjectTaskDTO> GetTasksByProjectId(int projectId)
+        {
+            return _mapper.Map<IEnumerable<ProjectTaskDTO>>(_db.ProjectTaskRepository.GetByProjectId(projectId));
         }
     }
 }

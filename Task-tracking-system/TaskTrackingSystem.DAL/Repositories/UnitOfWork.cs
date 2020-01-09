@@ -17,8 +17,8 @@ namespace TaskTrackingSystem.DAL.Repositories
 
         private ApplicationUserManager userManager;
         private ApplicationRoleManager roleManager;
-        private IRepository<Project> projectRepository;
-        private IRepository<ProjectTask> projectTaskRepository;
+        private IProjectRepository projectRepository;
+        private IProjectTaskRepository projectTaskRepository;
         private IUserProfileRepository userProfileRepository;
 
         public UnitOfWork(string connectionString)
@@ -40,11 +40,11 @@ namespace TaskTrackingSystem.DAL.Repositories
         {
             get { return roleManager; }
         }
-        public IRepository<ProjectTask> ProjectTaskRepository
+        public IProjectTaskRepository ProjectTaskRepository
         {
             get { return projectTaskRepository; }
         }
-        public IRepository<Project> ProjectRepository
+        public IProjectRepository ProjectRepository
         {
             get { return projectRepository; }
         }

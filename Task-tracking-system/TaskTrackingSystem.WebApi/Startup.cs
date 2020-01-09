@@ -9,6 +9,8 @@ using Microsoft.Owin.Security.OAuth;
 using System;
 using TaskTrackingSystem.WebApi.Providers;
 using Microsoft.Owin.Cors;
+using WebActivatorEx;
+using Swashbuckle.Application;
 
 [assembly: OwinStartup(typeof(TaskTrackingSystem.WebApi.Startup))]
 namespace TaskTrackingSystem.WebApi
@@ -18,8 +20,18 @@ namespace TaskTrackingSystem.WebApi
         public void Configuration(IAppBuilder app)
         {
             HttpConfiguration config = new HttpConfiguration();
+            //config.EnableSwagger();
             ConfigureOAuth(app);
             WebApiConfig.Register(config);
+            config.EnableSwagger(c =>
+            {
+                c.SingleApiVersion("v1", "Name.API");
+                c.IncludeXmlComments(System.AppDomain.CurrentDomain.BaseDirectory + @"bin\TaskTrackingSystem.WebApi.xml");
+            })
+            .EnableSwaggerUi(c =>
+            {
+            });
+            //SwaggerConfig.Register(config);
             app.UseCors(CorsOptions.AllowAll);
             app.UseNinjectMiddleware(CreateKernel).UseNinjectWebApi(config);
 

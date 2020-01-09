@@ -18,5 +18,6 @@ namespace TaskTrackingSystem.BLL.Interfaces
         void Update(UserDTO userDTO);
         UserDTO GetUserById(string id);
         IEnumerable<UserDTO> GetAll();
+        IEnumerable<ProjectTaskDTO> GetTasksByEnployeeId(string employeeId);
     }
 }

@@ -21,6 +21,8 @@ namespace TaskTrackingSystem.BLL.Services
             var config = new MapperConfiguration(cfg => {
                 cfg.CreateMap<UserProfile, UserDTO>();
                 cfg.CreateMap<UserDTO, UserProfile>();
+                cfg.CreateMap<ProjectTask, ProjectTaskDTO>();
+                cfg.CreateMap<ProjectTaskDTO, ProjectTask>();
 
                 cfg.CreateMap<ApplicationUser, UserDTO>();
                 cfg.CreateMap<UserDTO, ApplicationUser>();
@@ -36,7 +38,7 @@ namespace TaskTrackingSystem.BLL.Services
             ApplicationUser user = await Db.UserManager.FindByEmailAsync(userDto.Email);
             if (user == null)
             {
-                user = new ApplicationUser { Email = userDto.Email, UserName = userDto.Email };
+                user = new ApplicationUser { Email = userDto.Email, UserName = userDto.UserName };
                 var result = await Db.UserManager.CreateAsync(user, userDto.Password);
                 if (result.Errors.Count() > 0)
                     return new OperationDetails(false, result.Errors.FirstOrDefault(), "");
@@ -54,14 +56,9 @@ namespace TaskTrackingSystem.BLL.Services
 
         public async Task<UserDTO> Authenticate(string userName, string password)
         {
-            ClaimsIdentity claim = null;
             ApplicationUser userApp = await Db.UserManager.FindAsync(userName, password);
             UserDTO userDTO = createUserDTO(userApp, new UserProfile());
             return userDTO;
-            //if (user != null)
-            //    claim = await Db.UserManager.CreateIdentityAsync(user,
-            //                                DefaultAuthenticationTypes.ApplicationCookie);
-            //return claim;
         }
         public async Task SetInitialData(UserDTO adminDto, List<string> roles)
         {
@@ -127,6 +124,10 @@ namespace TaskTrackingSystem.BLL.Services
                 usersDTO.Add(createUserDTO(appList[i], userProfile[i]));
             }
             return usersDTO;
+        }
+        public IEnumerable<ProjectTaskDTO> GetTasksByEnployeeId(string employeeId)
+        {
+            return _mapper.Map<IEnumerable<ProjectTaskDTO>>(Db.ProjectTaskRepository.GetByEmployeeId(employeeId));
         }
 
         private UserDTO createUserDTO(ApplicationUser appUser, UserProfile profile) 

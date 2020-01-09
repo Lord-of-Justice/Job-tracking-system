@@ -10,7 +10,7 @@ using TaskTrackingSystem.DAL.Interfaces;
 
 namespace TaskTrackingSystem.DAL.Repositories
 {
-    public class ProjectTaskRepository : IRepository<ProjectTask>
+    public class ProjectTaskRepository : IProjectTaskRepository
     {
         private TaskTrackerContext context;
         public ProjectTaskRepository(TaskTrackerContext context)
@@ -31,6 +31,10 @@ namespace TaskTrackingSystem.DAL.Repositories
         {
             return context.ProjectTasks.Find(id);
         }
+        public IEnumerable<ProjectTask> GetByProjectId(int ProjectId)
+        {
+            return context.ProjectTasks.Where(x => x.ProjectId == ProjectId);
+        }
 
         public void Remove(ProjectTask projectTask)
         {
@@ -44,6 +48,11 @@ namespace TaskTrackingSystem.DAL.Repositories
         public void Dispose()
         {
             context.Dispose();
+        }
+
+        public IEnumerable<ProjectTask> GetByEmployeeId(string employeeId)
+        {
+            return context.ProjectTasks.Where(x => x.EmployeeId == employeeId);
         }
     }
 }
